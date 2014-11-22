@@ -6,36 +6,41 @@
 * Without Input-checking
 */
 class AuList{
-    private $username=null;
-    private $Majority=null;
-    private $PhoneNum=null;
+    private $name=null;
+    private $department=null;
+    private $contact=null;
     private $Type=null;        //two dimensional array
-    private $SportsType=null;
-    private $ClassIn=null;
-    private $AdvProject=null;
-    private $DisProject=null;
-    private $Location=null;
-    private $Class=null;
+    
+    private $peCourse=null;
+    
+    private $className=null;
+    private $advan=null;
+    private $disAdvan=null;
+    private $location=null;
+    private $others=null;
+
+    private $course=null;
     
     
-    public function setSports($Sports){
-        $this->SportsType=$SportsType;
+    public function setSports($peCourse){
+        $this->peCourse=$peCourse;
     }
-    public function setLearn($ClassIn,$AdvProject,$DisProject,$Location){
-        $this->ClassIn=$ClassIn;
-        $this->AdvProject=$AdvProject;
-        $this->DisProject=$DisProject;
-        $this->Location=$Location;
+    public function setStudy($className,$advan,$disAdvan,$location,$others){
+        $this->className=$className;
+        $this->advan=$advan;
+        $this->disAdvan=$disAdvan;
+        $this->location=$location;
+        $this->others=$others;
     }
-    public function setClass($Class){
-        $this->Class=$Class;
+    public function setCourse($course){
+        $this->course=$course;
     }
     
     
-    function __construct($username,$Majority,$PhoneNum,$Type){
-        $this->username=$username;
-        $this->Majority=$Majority;
-        $this->PhoneNum=$PhoneNum;
+    function __construct($name,$department,$contact,$Type){
+        $this->name=$name;
+        $this->department=$department;
+        $this->contact=$contact;
         $this->Type=$Type;
         return $this->add();
     }
@@ -44,12 +49,12 @@ class AuList{
     private function add(){
         $mysql=new SaeMysql();
         
-        $this->username=$mysql->escape($this->username);
-        $this->Majority=$mysql->escape($this->Majority);
-        $this->PhoneNum=$mysql->escape($this->PhoneNum);
+        $this->name=$mysql->escape($this->name);
+        $this->department=$mysql->escape($this->department);
+        $this->contact=$mysql->escape($this->contact);
         $this->Type=$mysql->escape($this->Type);
         
-        $sql="insert into au_list(name,major,phonenum,type) values('$this->username','$this->Majority','$this->PhoneNum','$this->Type')";
+        $sql="insert into au_list(name,department,contact,type) values('$this->name','$this->department','$this->contact','$this->Type')";
         $mysql->runSql($sql);
         if( $mysql->errno() != 0 )
         {
@@ -62,11 +67,11 @@ class AuList{
     
     
     //Ìí¼Ó´®½²¿ÎÄ¿
-    public function addClass(){
+    public function addCourse(){
         $mysql=new SaeMysql();
-        $this->class=$mysql->escape($this->class);
-        $sql_addClass="insert into au_list(class) values('$this->class')";
-        $mysql->runSql($sql_addClass);
+        $this->course=$mysql->escape($this->course);
+        $sql_addCourse="insert into au_list(course) values('$this->course')";
+        $mysql->runSql($sql_addCourse);
         if( $mysql->errno() != 0 )
         {
      	          die( "Error:" . $mysql->errmsg() );
@@ -77,16 +82,17 @@ class AuList{
         return true;
     }
     //Ìí¼Ó×ÔÏ°ÐÅÏ¢
-   public function addLearn(){
+   public function addStudy(){
         $mysql=new SaeMysql();
 
-        $this->ClassIn=$mysql->escape($this->ClassIn);
-        $this->AdvProject=$mysql->escape($this->AdvProject);
-        $this->DisProject=$mysql->escape($this->DisProject);
-        $this->Location=$mysql->escape($this->Location);
-        
-        $sql_addLearn="insert into au_list(classin,advproject,disproject,loaction) values('$this->ClassIn','$this->AdvProject','$this->DisProject','$this->Location')";
-        $mysql->runSql($sql_addLearn);
+        $this->className=$mysql->escape($this->className);
+        $this->advan=$mysql->escape($this->advan);
+        $this->disAdvan=$mysql->escape($this->disAdvan);
+        $this->location=$mysql->escape($this->location);
+        $this->others=$mysql->escape($this->others);
+
+        $sql_addStudy="insert into au_list(classname,advan,disadvan,location,others) values('$this->className','$this->advan','$this->disAdvan','$this->location','$this->others')";
+        $mysql->runSql($sql_addStudy);
         if( $mysql->errno() != 0 )
         {
      	          die( "Error:" . $mysql->errmsg() );
@@ -97,11 +103,11 @@ class AuList{
         return true;
     }
     //Ìí¼ÓÌåÓýÖú¿¼
-    public function addSports(){
+    public function addPes(){
         $mysql=new SaeMysql();
-        $this->SportsType=$mysql->escape($this->SportsType);
-        $sql_addSport="insert into au_list(sports) values('$this->SportsType')";
-        $mysql->runSql($sql_addSport);
+        $this->peCourse=$mysql->escape($this->peCourse);
+        $sql_addPes="insert into au_list(pecourse) values('$this->peCourse')";
+        $mysql->runSql($sql_addPes);
         if( $mysql->errno() != 0 )
         {
      	          die( "Error:" . $mysql->errmsg() );
@@ -113,31 +119,31 @@ class AuList{
     }
     
 }   
-	$username=$_POST['username'];
-	$majority=$_POST['majority'];
-	$phonenum=$_POST['phonenum'];
+	$name=$_POST['name'];
+	$department=$_POST['department'];
+	$contact=$_POST['contact'];
 	$type=$_POST['type'];
 
 
   	foreach($_POST['type'] as $type){
-  	if($aulist=new AuList($_POST['username'],$_POST['majority'],$_POST['phonenum'],$_POST['type'])){  
-  		echo("Basic Information Successfully added!");
-  	}
-    if($_POST['type']=="sports"){
-        $aulist->setSports($_POST['sports']);
-        if($aulist->addSports()){
-        	echo("Sports Successfully added!");
-    	}
-    }else if($_POST['type']=="Learn"){
-        $aulist->setLearn($_POST['classin'],$_POST['advproject'],$_POST['disproject'],$_POST['location']);
-        if($aulist->addLearn()){ 
-        	echo("Learning  Information Successfully added!");
-        }
-    }else{
-        $aulist->setClass($_POST['class']);
-        if($aulist->addClass()){  
-        	echo("Class Information Successfully added!");
-        }
+  		if($aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'],$_POST['type'])){  
+  			echo("Basic Information Successfully added!");
+  		}
+    	if($_POST['type']=="pe"){
+        	$aulist->setSports($_POST['pe']);
+        	if($aulist->addPes()){
+        		echo("Sports Successfully added!");
+    		}
+    	}else if($_POST['type']=="study"){
+        	$aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location'],$_POST['others']);
+        	if($aulist->addStudy()){ 
+        		echo("Studying  Information Successfully added!");
+        	}
+    	}else{
+        	$aulist->setCourse($_POST['course']);
+        	if($aulist->addCourse()){  
+        		echo("Course Information Successfully added!");
+        	}
     }
 }  
 
@@ -149,16 +155,16 @@ class AuList{
 
 
 /*class AuSports{ 
-	private $SportsType=null;
-	function __construct($SportsType){ 
-		$this->SportsType=$SportsType;
-		return $this->addSports;
+	private $peCourse=null;
+	function __construct($peCourse){ 
+		$this->peCourse=$peCourse;
+		return $this->addPes;
 	}
-	private function addSports(){ 
+	private function addPes(){ 
 		$mysql=new SaeMysql();
-		$this->SportsType=$mysql->escape($this->SportsType);
-        $sql_addSport="insert into au_list(sports) values('$this->SportsType')";
-        $mysql->runSql($sql_addSport);
+		$this->peCourse=$mysql->escape($this->peCourse);
+        $sql_addPes="insert into au_list(pecourse) values('$this->peCourse')";
+        $mysql->runSql($sql_addPes);
         if( $mysql->errno() != 0 )
         {
      	          die( "Error:" . $mysql->errmsg() );
@@ -171,26 +177,31 @@ class AuList{
 
 }
 class AuLearn{ 
-	private $ClassIn=null;
-    private $AdvProject=null;
-    private $DisProject=null;
-    private $Location=null;
+	private $className=null;
+    private $advan=null;
+    private $disAdvan=null;
+    private $location=null;
+    private $others=null;
 
-    function __construct($ClassIn,$AdvProject,$DisProject,$Location){ 
-    	$this->ClassIn=$ClassIn;
-    	$this->AdvProject=$AdvProject;
-    	$this->DisProject=$DisProject;
-    	$this->Location=$Location;
-    	return $this->addLearn();
+    function __construct($className,$advan,$disAdvan,$location,$others){ 
+    	$this->className=$className;
+    	$this->advan=$advan;
+    	$this->disAdvan=$disAdvan;
+    	$this->location=$location;
+    	$this->others=$others;
+    	return $this->addStudy();
     }
-    private function addLearn(){ 
+    private function addStudy(){ 
     	$mysql=new SaeMysql();
-    	$this->ClassIn=$mysql->escape($this->ClassIn);
-        $this->AdvProject=$mysql->escape($this->AdvProject);
-        $this->DisProject=$mysql->escape($this->DisProject);
-        $this->Location=$mysql->escape($this->Location);
-        $sql_addLearn="insert into au_list(classin,advproject,disproject,loaction) values('$this->ClassIn','$this->AdvProject','$this->DisProject','$this->Location')";
-        $mysql->runSql($sql_addLearn);
+    	
+    	$this->className=$mysql->escape($this->className);
+        $this->advan=$mysql->escape($this->advan);
+        $this->disAdvan=$mysql->escape($this->disAdvan);
+        $this->location=$mysql->escape($this->location);
+        $this->others=$mysql->escape($this->others);
+        
+        $sql_addStudy="insert into au_list(classname,advan,disadvan,loaction,others) values('$this->className','$this->advan','$this->disAdvan','$this->location','$this->others')";
+        $mysql->runSql($sql_addStudy);
         if( $mysql->errno() != 0 )
         {
      	          die( "Error:" . $mysql->errmsg() );
@@ -203,17 +214,17 @@ class AuLearn{
 }
 
 class AuClass{  
-	private $Class;
+	private $course;
 
-	function __construct($Class){ 
-		$this->Class=$Class;
-		return $this->addClass();
+	function __construct($course){ 
+		$this->course=$course;
+		return $this->addCourse();
 	}
-	private function addClass(){ 
+	private function addCourse(){ 
 		$mysql=new SaeMysql();
-		$this->class=$mysql->escape($this->class);
-        $sql_addClass="insert into au_list(class) values('$this->class')";
-        $mysql->runSql($sql_addClass);
+		$this->Course=$mysql->escape($this->course);
+        $sql_addCourse="insert into au_list(course) values('$this->course')";
+        $mysql->runSql($sql_addCourse);
         if( $mysql->errno() != 0 )
         {
      	          die( "Error:" . $mysql->errmsg() );
@@ -226,20 +237,20 @@ class AuClass{
 
 }
 	foreach($_POST['type'] as $type){
-		$aulist=new AuList($_POST['username'],$_POST['majority'],$_POST['phonenum'],$_POST['type']);
+		$aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'],$_POST['type']);
 	
 
-		if($_POST['type']=="sports"){
-        	$ausports=new AuSports($_POST['sports']);
+		if($_POST['type']=="pe"){
+        	$ausports=new AuSports($_POST['pe']);
         	if($aulist&&$ausports)  
 				return true;
     	}else if($_POST['type']=="Learn"){
-        	$aulearn=new AuLearn($_POST['classin'],$_POST['advproject'],$_POST['disproject'],$_POST['location']);
+        	$aulearn=new AuLearn($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location']);
         	if($aulist&&$aulearn)   
 				return true;
        	}
     	else{
-        	$auclass=new AuClass($_POST['class']);
+        	$auclass=new AuClass($_POST['course']);
         	if($aulist&&$auclass)  
 				return true;
         	
@@ -250,3 +261,4 @@ class AuClass{
 
 
 ?>
+
