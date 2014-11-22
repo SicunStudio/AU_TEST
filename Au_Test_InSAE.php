@@ -1,7 +1,7 @@
-﻿<?php
+<?php
 /*
 * AUTEST 
-* @author ISiCun
+* @author HUST AU sicun studio
 * version v0.1
 * Without Input-checking
 */
