@@ -1,8 +1,14 @@
+
+
+
 <?php
+/*
+*    The Demo for AUTEST without OOP.
+*/
 $mysql=new SaeMysql();
 $username=$mysql->escape($_POST['name']);
 $Majority=$mysql->escape($_POST['Major']);
-$PhoneNum=$mysql->escape($_POST['Major']);
+$PhoneNum=$mysql->escape($_POST['PhoneNum']);
 $Type=$mysql->escape($_POST['Type']);
 
 $sql="insert into au_list(name,major,phonenum) values('$username','$Majority','$PhoneNum')";

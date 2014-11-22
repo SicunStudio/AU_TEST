@@ -1,9 +1,12 @@
 <?php
+    /*
+    * The Demo Not Using The Class SaeMysql
+    */
     $username=$_POST['UserName'];
     $Majority=$_POST['Major'];
     $PhoneNum=$_POST['PhoneNum'];
     
-    $Type=$_POST['Type'];   //Öú¿¼ÀàÐÍ
+    $Type=$_POST['Type'];   //åŠ©è€ƒç±»åž‹
     
     /*
     * Open MySQL

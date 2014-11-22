@@ -1,5 +1,8 @@
 ﻿<?php
 /*
+* AUTEST 
+* @author ISiCun
+* version v0.1
 * Without Input-checking
 */
 class AuList{
