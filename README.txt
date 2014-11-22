@@ -1,0 +1,8 @@
+AU_TEST
+=======
+
+# AU_TEST DEMO v0.1
+# @author    HUST AU sicun studio
+# @copyright 2014
+# This is a WebSite Collecting Student's Information about the coming exam;
+# For Details plz see Au_Test_InSAE.php&AUTESTbyLBQ.png
