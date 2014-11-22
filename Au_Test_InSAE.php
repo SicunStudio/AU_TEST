@@ -21,6 +21,13 @@ class AuList{
 
     private $course=null;
     
+    function __construct($name,$department,$contact){
+        $this->name=$name;
+        $this->department=$department;
+        $this->contact=$contact;
+        //$this->Type=$Type;
+        return $this->add();
+    }
     
     public function setSports($peCourse){
         $this->peCourse=$peCourse;
@@ -36,37 +43,42 @@ class AuList{
         $this->course=$course;
     }
     
+
+    /*
+    * Boolean add- method
+    */
     
-    function __construct($name,$department,$contact,$Type){
-        $this->name=$name;
-        $this->department=$department;
-        $this->contact=$contact;
-        $this->Type=$Type;
-        return $this->add();
+    public function addType($key){ 
+    	$mysql=new SaeMysql();
+    	$sql_type="insert into au_list(type) values('$key')";
+    	$mysql->runSql($sql_type);
+        if( $mysql->errno() != 0 )
+        {
+     	      //die( "Error:" . $mysql->errmsg() );
+              return false;
+        }
+        $mysql->closeDb();
+        return true;
     }
-    
-    //»ù±¾ÐÅÏ¢Â¼Èë
+    //Add Basic Information
     private function add(){
         $mysql=new SaeMysql();
         
         $this->name=$mysql->escape($this->name);
         $this->department=$mysql->escape($this->department);
         $this->contact=$mysql->escape($this->contact);
-        $this->Type=$mysql->escape($this->Type);
-        
-        $sql="insert into au_list(name,department,contact,type) values('$this->name','$this->department','$this->contact','$this->Type')";
+        //$this->Type=$mysql->escape($this->Type);
+        $sql="insert into au_list(name,department,contact) values('$this->name','$this->department','$this->contact')";
         $mysql->runSql($sql);
         if( $mysql->errno() != 0 )
         {
-     	      die( "Error:" . $mysql->errmsg() );
+     	      //die( "Error:" . $mysql->errmsg() );
               return false;
         }
         $mysql->closeDb();
         return true;
     }
-    
-    
-    //Ìí¼Ó´®½²¿ÎÄ¿
+        
     public function addCourse(){
         $mysql=new SaeMysql();
         $this->course=$mysql->escape($this->course);
@@ -74,14 +86,14 @@ class AuList{
         $mysql->runSql($sql_addCourse);
         if( $mysql->errno() != 0 )
         {
-     	          die( "Error:" . $mysql->errmsg() );
+     	          //die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
         
         return true;
     }
-    //Ìí¼Ó×ÔÏ°ÐÅÏ¢
+   
    public function addStudy(){
         $mysql=new SaeMysql();
 
@@ -95,22 +107,7 @@ class AuList{
         $mysql->runSql($sql_addStudy);
         if( $mysql->errno() != 0 )
         {
-     	          die( "Error:" . $mysql->errmsg() );
-                  return false;
-        }
-        $mysql->closeDb();
-        
-        return true;
-    }
-    //Ìí¼ÓÌåÓýÖú¿¼
-    public function addPes(){
-        $mysql=new SaeMysql();
-        $this->peCourse=$mysql->escape($this->peCourse);
-        $sql_addPes="insert into au_list(pecourse) values('$this->peCourse')";
-        $mysql->runSql($sql_addPes);
-        if( $mysql->errno() != 0 )
-        {
-     	          die( "Error:" . $mysql->errmsg() );
+     	          //die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -118,43 +115,65 @@ class AuList{
         return true;
     }
     
+    public function addPes(){
+        $mysql=new SaeMysql();
+        $this->peCourse=$mysql->escape($this->peCourse);
+        $sql_addPes="insert into au_list(pecourse) values('$this->peCourse')";
+        $mysql->runSql($sql_addPes);
+        if( $mysql->errno() != 0 )
+        {
+     	          //die( "Error:" . $mysql->errmsg() );
+                  return false;
+        }
+        $mysql->closeDb();
+        
+        return true;
+    }
 }   
+	//除去特殊符号
 	$name=$_POST['name'];
 	$department=$_POST['department'];
 	$contact=$_POST['contact'];
 	$type=$_POST['type'];
-
-
-  	foreach($_POST['type'] as $type){
-  		if($aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'],$_POST['type'])){  
-  			echo("Basic Information Successfully added!");
-  		}
-    	if($_POST['type']=="pe"){
-        	$aulist->setSports($_POST['pe']);
-        	if($aulist->addPes()){
-        		echo("Sports Successfully added!");
+	//Code here...
+	
+	if($aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'])){  
+  		echo("Basic Information Successfully added!");
+  		
+  		//update
+  		foreach($_POST['type'] as $key){
+  			$aulist->addType($key);
+    		if($key=="pe"){
+        		$aulist->setSports($_POST['peCourse']);
+        		if($aulist->addPes()){
+        			echo("Sports Successfully added!");
+    			}
+    		}else if($key=="study"){
+        		$aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location'],$_POST['others']);
+        		if($aulist->addStudy()){ 
+        			echo("Studying  Information Successfully added!");
+        		}
+    		}else{
+        		$aulist->setCourse($_POST['course']);
+        		if($aulist->addCourse()){  
+        			echo("Course Information Successfully added!");
+        		}
     		}
-    	}else if($_POST['type']=="study"){
-        	$aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location'],$_POST['others']);
-        	if($aulist->addStudy()){ 
-        		echo("Studying  Information Successfully added!");
-        	}
-    	}else{
-        	$aulist->setCourse($_POST['course']);
-        	if($aulist->addCourse()){  
-        		echo("Course Information Successfully added!");
-        	}
-    }
-}  
+		}  
+  	}
+
+	
 
 
   /*
-   * 将各种助考对应的类分开
+   * 将各种助考对应的类分开 Version 2
    */
 
 
 
-/*class AuSports{ 
+/*
+//PeClass
+class AuPes{ 
 	private $peCourse=null;
 	function __construct($peCourse){ 
 		$this->peCourse=$peCourse;
@@ -167,7 +186,7 @@ class AuList{
         $mysql->runSql($sql_addPes);
         if( $mysql->errno() != 0 )
         {
-     	          die( "Error:" . $mysql->errmsg() );
+     	          //die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -176,7 +195,8 @@ class AuList{
 	}
 
 }
-class AuLearn{ 
+//StudyClass
+class AuStudy{ 
 	private $className=null;
     private $advan=null;
     private $disAdvan=null;
@@ -204,7 +224,7 @@ class AuLearn{
         $mysql->runSql($sql_addStudy);
         if( $mysql->errno() != 0 )
         {
-     	          die( "Error:" . $mysql->errmsg() );
+     	          //die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -213,7 +233,8 @@ class AuLearn{
 	}
 }
 
-class AuClass{  
+//CourseClass
+class AuCourse{  
 	private $course;
 
 	function __construct($course){ 
@@ -227,7 +248,7 @@ class AuClass{
         $mysql->runSql($sql_addCourse);
         if( $mysql->errno() != 0 )
         {
-     	          die( "Error:" . $mysql->errmsg() );
+     	          //die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -236,29 +257,73 @@ class AuClass{
 	}
 
 }
-	foreach($_POST['type'] as $type){
-		$aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'],$_POST['type']);
-	
-
-		if($_POST['type']=="pe"){
-        	$ausports=new AuSports($_POST['pe']);
-        	if($aulist&&$ausports)  
-				return true;
-    	}else if($_POST['type']=="Learn"){
-        	$aulearn=new AuLearn($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location']);
-        	if($aulist&&$aulearn)   
-				return true;
-       	}
-    	else{
-        	$auclass=new AuClass($_POST['course']);
-        	if($aulist&&$auclass)  
-				return true;
-        	
-    	}
+//BasicClass
+class AuList{
+    private $name=null;
+    private $department=null;
+    private $contact=null;
+    private $Type=null;        //two dimensional array
+    
+    function __construct($name,$department,$contact){
+        $this->name=$name;
+        $this->department=$department;
+        $this->contact=$contact;
+        //$this->Type=$Type;
+        return $this->add();
+    }
+    public function addType($key){ 
+    	$mysql=new SaeMysql();
+    	$sql_type="insert into au_list(type) values('$key')";
+    	$mysql->runSql($sql_type);
+        if( $mysql->errno() != 0 )
+        {
+     	      //die( "Error:" . $mysql->errmsg() );
+              return false;
+        }
+        $mysql->closeDb();
+        return true;
+    }
+    //Add Basic Information
+    private function add(){
+        $mysql=new SaeMysql();
+        
+        $this->name=$mysql->escape($this->name);
+        $this->department=$mysql->escape($this->department);
+        $this->contact=$mysql->escape($this->contact);
+        //$this->Type=$mysql->escape($this->Type);
+        $sql="insert into au_list(name,department,contact) values('$this->name','$this->department','$this->contact')";
+        $mysql->runSql($sql);
+        if( $mysql->errno() != 0 )
+        {
+     	      //die( "Error:" . $mysql->errmsg() );
+              return false;
+        }
+        $mysql->closeDb();
+        return true;
+    }
+        
+    
+}   
+	//update
+	if($aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'])){ 
+		foreach($_POST['type'] as $key){
+			$aulist->addType($key);
+			if($key=="pe"){
+        		$ausports=new AuPes($_POST['peCourse']);
+        		if($ausports)  
+					return true;
+    		}else if($key=="study"){
+        		$aulearn=new AuStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location']);
+        		if($austudy)   
+					return true;
+       		}
+    		else{
+        		$aucourse=new AuCourse($_POST['course']);
+        		if($aucourse)  
+					return true;
+        	}
+		}
 	}
+	
 */
-
-
-
 ?>
-
