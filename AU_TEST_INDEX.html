@@ -1,0 +1,520 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="width=device-width,user-scalable=no; charset=utf-8" name="viewport"/>
+<title>华中科技大学学生社团联合会社团爱心助考报名</title>
+<style type="text/css">
+body {
+	background-image: url(bkg4.png);
+	font-family: 微软雅黑;
+	background-size:contain;
+        background-repeat:no-repeat;
+        background-position:top center;
+    background-color:#fffad6;
+}
+
+input {
+	border-radius:15px;
+	background-color:#FF0;
+	text-align:center;
+}
+
+.normaltext{
+		text-align:center;
+	color:#f9887b;
+	font-size:19px;
+}
+
+.normalinput{
+	font-family: "微软雅黑";
+	font-size: 20px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: dotted;
+	border-left-style: none;
+	background-color: transparent;
+	width: 90%;
+	padding: 5px;
+	margin: 5px;
+	border-bottom-color: #FCC8AF;
+}
+
+.errmsg{
+	
+	}
+
+.hiddenbox{
+        visibility:hidden;
+}
+
+#selpe{
+    width:100%;	
+	height:75px;
+	line-height:75px;
+	float:left;
+	text-align:center;
+	vertical-align:middle;
+	background-color:#60c4da;	
+	border-radius:30px 0px 0px 30px;
+	font-size:16px;
+	color:#fde5a5;
+}
+#tableseltype {
+	text-align: center;
+	vertical-align: middle;
+	position: absolute;
+}
+
+#selstudy{
+     width:100%;	
+	height:75px;
+	line-height:75px;
+	float:left;
+	text-align:center;
+	vertical-align:middle;
+	background-color:#60c4da;
+	font-size:16px;
+	color:#fde5a5;
+}
+
+#selteach{
+  width:100%;	
+	height:75px;
+	line-height:75px;
+	float:left;
+	text-align:center;
+	vertical-align:middle;
+	background-color:#60c4da;
+	border-radius: 0px 30px 30px 0px;
+	font-size:16px;
+	color:#fde5a5;
+}
+
+#areatitle{
+	background-color:#60c4da;
+	border-radius:15px;
+	width:150px;
+	height:45px;
+	line-height:45px;
+	text-align:center;
+	color:#fde5a5;
+	font-size:24px;
+}
+
+.peopt_general {
+	width:90px;
+	height:50px;
+	line-height:50px;
+	text-align:center;
+	background-color:#fde5a5;
+	color:#60c4da;
+	font-size:16px;
+}
+	
+#stbtn{
+	width:85%;
+	height:40px;
+	color:#ffffff;
+	font-size:18px;
+	font-family:微软雅黑;
+	background-color:#f9887b;
+	border-bottom:none;
+	border-left:none;
+	border-top:none;
+	border-right:none;
+}	
+	
+#copyright {	
+	text-align:center;	
+        font-size:10px;
+}
+</style>
+
+<script>
+var pe;
+var study;
+var teach;
+var peCoursetext;
+pe=0;
+study=0;
+teach=0;
+
+function showhidediv(target){
+	switch(target)
+	{
+case "pe":
+if (pe==0)
+{
+	document.getElementById("areape").style.display='';
+	document.getElementById("selpe").style.backgroundColor='#fde5a5';
+	document.getElementById("selpe").style.color='#60c4da';
+	document.getElementById("checkboxpe").value=1;
+	document.getElementById("checkboxpe").checked=1;
+	pe=1;
+}
+
+else
+{	
+document.getElementById("areape").style.display='none';
+	document.getElementById("selpe").style.backgroundColor='#60c4da';
+	document.getElementById("selpe").style.color='#fde5a5';
+	document.getElementById("checkboxpe").value=0;
+	document.getElementById("checkboxpe").checked=0;
+pe=0;
+}
+break;
+
+case "study":
+if (study==0)
+{
+	document.getElementById("areastudy").style.display='';
+		document.getElementById("selstudy").style.backgroundColor='#fde5a5';
+	document.getElementById("selstudy").style.color='#60c4da';
+	document.getElementById("checkboxstudy").value=1;
+	document.getElementById("checkboxstudy").checked=1;
+	study=1;
+}
+else
+{	
+document.getElementById("areastudy").style.display='none';
+	document.getElementById("selstudy").style.backgroundColor='#60c4da';
+	document.getElementById("selstudy").style.color='#fde5a5';
+	document.getElementById("checkboxstudy").value=0;
+	document.getElementById("checkboxstudy").checked=0;
+study=0;
+}
+break;
+
+case "teach":
+if (teach==0)
+{
+	document.getElementById("areateach").style.display='';
+	document.getElementById("selteach").style.backgroundColor='#fde5a5';
+	document.getElementById("selteach").style.color='#60c4da';
+	document.getElementById("checkboxteach").value=1;
+	document.getElementById("checkboxteach").checked=1;
+	teach=1;
+}
+else
+{	
+document.getElementById("areateach").style.display='none';
+	document.getElementById("selteach").style.backgroundColor='#60c4da';
+	document.getElementById("selteach").style.color='#fde5a5';
+	document.getElementById("checkboxteach").value=0;
+	document.getElementById("checkboxteach").checked=0;
+teach=0;
+}
+break;
+
+	}
+    
+    var total;
+    total=pe + study + teach ;
+    if (total > 0){
+        document.getElementById("stbtn").style.display="";
+       document.getElementById("notfull").style.display="none";
+    }
+    else{
+        document.getElementById("stbtn").style.display="none";
+         document.getElementById("notfull").style.display="";
+    }
+    
+    
+    
+}
+
+function selpecourse(peopt)
+{
+	document.getElementById("wq").style.backgroundColor='#fde5a5';
+	document.getElementById("pq").style.backgroundColor='#fde5a5';
+	document.getElementById("ppq").style.backgroundColor='#fde5a5';	
+	document.getElementById("lq").style.backgroundColor='#fde5a5';
+	document.getElementById("yj").style.backgroundColor='#fde5a5';
+	document.getElementById("ws").style.backgroundColor='#fde5a5';	
+	document.getElementById("tqd").style.backgroundColor='#fde5a5';
+	document.getElementById("ymq").style.backgroundColor='#fde5a5';
+	document.getElementById("tq").style.backgroundColor='#fde5a5';	
+
+switch(peopt){
+  case"wq":
+	document.getElementById("wq").style.backgroundColor='#afe2da';
+peCoursetext="网球";
+document.getElementById("wq").style.backgroundColor='#afe2da';
+break;
+
+  case"pq":
+    document.getElementById("pq").style.backgroundColor='#afe2da';
+peCoursetext="排球";
+break;
+
+  case"ppq":
+	document.getElementById("ppq").style.backgroundColor='#afe2da';	
+peCoursetext="乒乓球";
+break;
+
+  case"lq":
+	document.getElementById("lq").style.backgroundColor='#afe2da';
+peCoursetext="篮球";
+break;
+
+  case"yj":
+	document.getElementById("yj").style.backgroundColor='#afe2da';
+peCoursetext="瑜伽";
+break;
+
+  case"ws":
+	document.getElementById("ws").style.backgroundColor='#afe2da';	
+peCoursetext="武术（太极拳）";
+break;
+
+  case"tqd":
+	document.getElementById("tqd").style.backgroundColor='#afe2da';
+peCoursetext="跆拳道";
+break;
+
+   case"ymq":
+	document.getElementById("ymq").style.backgroundColor='#afe2da';
+peCoursetext="羽毛球";
+break;
+
+   case"tq":
+	document.getElementById("tq").style.backgroundColor='#afe2da';
+peCoursetext="台球";
+
+break;
+
+  }
+  document.getElementById("pectext").value=peCoursetext;
+
+}
+
+</script>
+
+</head>
+
+
+
+<body>
+
+
+
+
+<!--页面标题-->
+<img src="title.png" width="100%"/>
+<form action="insert.php" method="post" id="main" style="width:100%">
+
+<!--个人信息-->
+<p class="normaltext" id="seltypetext">
+萌萌哒的微仔~<br>我是
+</p>
+<table width="100%" border="0">
+  <tr>
+    <td width="30%" align="right" valign="middle"><span class="normaltext">姓名</span></td>
+    <td width="70%" align="left" valign="middle"><input name="name" type="text" maxlength="25" class="normalinput"/></td>
+  </tr>
+  <tr>
+    <td width="30%" align="right" valign="middle"><span class="normaltext">院系</span></td>
+    <td width="70%" align="left" valign="right">
+      <input name="department" type="text" class="normalinput" />
+   </td>
+  </tr>
+  <tr>
+    <td width="30%" align="right" valign="middle"><span class="normaltext">联系方式</span></td>
+    <td width="70%" align="left" valign="middle"><input name="contact" type="text" class="normalinput" /></td>
+  </tr>
+</table>
+
+<!--类型选择-->
+<br>
+<p class="normaltext" >
+我想要（可多选）
+</p>
+<table width="100%" border="0" align="center">
+  <tr>
+    <td width="1%" align="center" valign="middle">&nbsp;</td>
+    <td width="32%" align="center" valign="middle"> <div id="selpe" onclick="showhidediv('pe')">
+        体育助考
+  </div>
+ 
+  </td>
+    <td width="32%" align="center" valign="middle">
+    <div id="selstudy" onclick="showhidediv('study')">
+        一对一自习
+  </div>
+    </td>
+    <td width="32%" align="center" valign="middle">     
+  <div id="selteach" onclick="showhidediv('teach')">
+    知识点串讲
+  </div>
+  </td>
+    <td width="1%" align="center" valign="middle">&nbsp;
+  </td>
+  </tr>
+</table>
+  <input type="checkbox" name="pe" id="checkboxpe" class="hiddenbox"  />
+  <input type="checkbox" name="study" id="checkboxstudy" class="hiddenbox" />
+  <input type="checkbox" name="teach" id="checkboxteach" class="hiddenbox"  />
+   
+
+    
+    <!--体育助考-->
+<div id="areape" style="display:none"> 
+  
+  <table width="100%" height="50" border="0" align="center">
+     <tr>
+       <td width="201" align="center">
+       <div id="areatitle">
+       体育助考
+      </div>
+       </td>
+     </tr>
+   </table>
+   <p>&nbsp;</p>
+   <table width="288" border="0" align="center" id="petable">
+     <tr>
+       <td width="90" align="center" valign="middle">
+       <div class="peopt_general" id="wq" style="border-radius:10px 0px 0px 0px" onclick="selpecourse('wq')">
+       网球
+       </div>
+       </td>
+       <td width="90" align="center" valign="middle">
+       <div class="peopt_general" id="pq" onclick="selpecourse('pq')">
+       排球
+       </div>
+       </td>
+       <td width="90" align="center" valign="middle">
+       <div class="peopt_general" id="ppq" style="border-radius:0px 10px 0px 0px" onclick="selpecourse('ppq')">
+       乒乓球
+       </div>
+       </td>
+     </tr>
+     <tr>
+       <td align="center" valign="middle">
+       <div class="peopt_general" id="lq" onclick="selpecourse('lq')">
+       篮球
+       </div>
+       </td>
+       <td width="90" align="center" valign="middle">
+       <div class="peopt_general" id="yj" onclick="selpecourse('yj')">
+       瑜伽
+       </div>
+       </td>
+       <td width="90" align="center" valign="middle">
+       <div class="peopt_general" id="ws" style="font-size:14px; line-height:24px;" onclick="selpecourse('ws')">
+       武术<br>（太极拳）
+       </div>
+       </td>
+     </tr>
+     <tr>
+       <td align="center" valign="middle">
+         <div class="peopt_general" id="tqd" style="border-radius:0px 0px 0px 10px" onclick="selpecourse('tqd')">
+       跆拳道
+       </div>
+       </td>
+       <td width="90" align="center" valign="middle">
+         <div class="peopt_general" id="ymq" onclick="selpecourse('ymq')">
+       羽毛球
+       </div>
+       </td>
+       <td width="90" align="center" valign="middle">
+         <div class="peopt_general" id="tq" style="border-radius:0px 0px 10px 0px" onclick="selpecourse('tq')">
+       台球
+       </div>
+       </td>
+     </tr>
+ </table>
+   <p>
+   
+    <input name="peCourse" type="text" value="" id="pectext" class="hiddenbox"/>
+   </p>
+   <table width="100%" border="0">
+     <tr>
+       <td>
+      <p id="error_pecourse" class="errmsg"></p></td>
+     </tr>
+   </table>
+</div>
+
+<br>
+
+<!--一对一自习-->
+<div id="areastudy" class="normaltext" style="display:none">
+
+  
+  <table width="100%" border="0">
+    <tr>
+      <td height="47" align="center" valign="middle">
+      <div id="areatitle">
+     一对一自习
+      </div> 
+      </td>
+    </tr>
+  </table>
+ <table width="100%" border="0">
+  <tr>
+    <td width="30%" align="right" valign="middle">专业班级</td>
+    <td width="70%" align="left" valign="middle"><input name="className" type="text" class="normalinput" /></td>
+  </tr>
+  <tr>
+    <td width="30%" align="right" valign="middle">优势科目</td>
+    <td width="70%" align="left" valign="middle"><input name="advan" type="text" class="normalinput" /></td>
+  </tr>
+  <tr>
+    <td width="30%" align="right" valign="middle">劣势科目</td>
+    <td width="70%" align="left" valign="middle"><input name="disadvan" type="text" class="normalinput" /></td>
+  </tr>
+  <tr>
+    <td align="right" valign="middle">自习地点</td>
+    <td align="left" valign="middle"><input name="location" type="text" class="normalinput" /></td>
+  </tr>
+  <tr>
+    <td width="30%" align="right" valign="middle">其他要求</td>
+    <td width="70%" align="left" valign="middle"><input name="others" type="text" class="normalinput" /></td>
+  </tr>
+</table>
+</div>
+
+<br>
+
+<!--知识点串讲-->
+<div id="areateach" class="normaltext" style="display:none" >
+  <table width="100%" border="0">
+    <tr>
+      <td align="center" valign="middle">
+      <div id="areatitle">
+        知识点串讲
+      </div>
+       </td>
+    </tr>
+</table>
+      <table width="100%" border="0">
+  <tr>
+    <td width="30%" align="right" valign="middle">串讲科目</td>
+    <td width="70%" align="left" valign="middle"> <input name="course" type="text" class="normalinput" /></td>
+  </tr>
+</table>
+</div>
+
+<br>
+
+<!--提交-->
+<table width="100%" border="0" align="center">
+  <tr>
+    <td align="center" valign="middle">
+    <input id="stbtn" type="submit" formmethod="post"  style="display:none;" value="信息已确认，求大神带我飞！"/>
+        <div id="notfull" style="background-color:#CCC; width:85%; height:40px ;line-height:40px; font-family:微软雅黑; font-size:18px; border-radius:15px;">请先选择！</div>
+        
+    </td>
+  </tr>
+</table>
+
+
+</form>
+<!--版权-->
+
+<p><img src="bottom.png" width="100%" height="40" />
+</p>
+<p  id="copyright">Copyright © 2014 HUST AU sicun studio, All Rights Reserved. </p>
+</body>
+</html>

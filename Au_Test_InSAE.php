@@ -9,13 +9,13 @@ class AuList{
     private $name=null;
     private $department=null;
     private $contact=null;
-    private $Type=null;        //two dimensional array
+    //private $Type=null;        //two dimensional array
     
     private $peCourse=null;
     
     private $className=null;
     private $advan=null;
-    private $disAdvan=null;
+    private $disadvan=null;
     private $location=null;
     private $others=null;
 
@@ -32,10 +32,10 @@ class AuList{
     public function setSports($peCourse){
         $this->peCourse=$peCourse;
     }
-    public function setStudy($className,$advan,$disAdvan,$location,$others){
+    public function setStudy($className,$advan,$disadvan,$location,$others){
         $this->className=$className;
         $this->advan=$advan;
-        $this->disAdvan=$disAdvan;
+        $this->disadvan=$disadvan;
         $this->location=$location;
         $this->others=$others;
     }
@@ -50,11 +50,11 @@ class AuList{
     
     public function addType($key){ 
     	$mysql=new SaeMysql();
-    	$sql_type="insert into au_list(type) values('$key')";
+    	$sql_type="update au_list set type=concat(type,' $key') where name='$this->name' ";
     	$mysql->runSql($sql_type);
         if( $mysql->errno() != 0 )
         {
-     	      //die( "Error:" . $mysql->errmsg() );
+     	      die( "Error:" . $mysql->errmsg() );
               return false;
         }
         $mysql->closeDb();
@@ -72,7 +72,7 @@ class AuList{
         $mysql->runSql($sql);
         if( $mysql->errno() != 0 )
         {
-     	      //die( "Error:" . $mysql->errmsg() );
+     	      die( "Error:" . $mysql->errmsg() );
               return false;
         }
         $mysql->closeDb();
@@ -82,11 +82,11 @@ class AuList{
     public function addCourse(){
         $mysql=new SaeMysql();
         $this->course=$mysql->escape($this->course);
-        $sql_addCourse="insert into au_list(course) values('$this->course')";
+        $sql_addCourse="update au_list set course='$this->course' where name='$this->name'";
         $mysql->runSql($sql_addCourse);
         if( $mysql->errno() != 0 )
         {
-     	          //die( "Error:" . $mysql->errmsg() );
+     	          die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -99,15 +99,15 @@ class AuList{
 
         $this->className=$mysql->escape($this->className);
         $this->advan=$mysql->escape($this->advan);
-        $this->disAdvan=$mysql->escape($this->disAdvan);
+        $this->disadvan=$mysql->escape($this->disadvan);
         $this->location=$mysql->escape($this->location);
         $this->others=$mysql->escape($this->others);
 
-        $sql_addStudy="insert into au_list(classname,advan,disadvan,location,others) values('$this->className','$this->advan','$this->disAdvan','$this->location','$this->others')";
+        $sql_addStudy="update au_list set classname='$this->className',advan='$this->advan',disadvan='$this->disadvan',location='$this->location',others='$this->others' where name='$this->name'";
         $mysql->runSql($sql_addStudy);
         if( $mysql->errno() != 0 )
         {
-     	          //die( "Error:" . $mysql->errmsg() );
+     	          die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -118,11 +118,11 @@ class AuList{
     public function addPes(){
         $mysql=new SaeMysql();
         $this->peCourse=$mysql->escape($this->peCourse);
-        $sql_addPes="insert into au_list(pecourse) values('$this->peCourse')";
+        $sql_addPes="update au_list set pecourse='$this->peCourse' where name='$this->name'";
         $mysql->runSql($sql_addPes);
         if( $mysql->errno() != 0 )
         {
-     	          //die( "Error:" . $mysql->errmsg() );
+     	          die( "Error:" . $mysql->errmsg() );
                   return false;
         }
         $mysql->closeDb();
@@ -131,35 +131,59 @@ class AuList{
     }
 }   
 	//除去特殊符号
-	$name=$_POST['name'];
-	$department=$_POST['department'];
-	$contact=$_POST['contact'];
-	$type=$_POST['type'];
+	$name=trim($_POST['name']);
+	$department=trim($_POST['department']);
+	$contact=trim($_POST['contact']);
+	//$type=$_POST['type'];
 	//Code here...
 	
-	if($aulist=new AuList($_POST['name'],$_POST['department'],$_POST['contact'])){  
+	if($aulist=new AuList($name,$department,$contact)){  
   		echo("Basic Information Successfully added!");
-  		
-  		//update
-  		foreach($_POST['type'] as $key){
-  			$aulist->addType($key);
-    		if($key=="pe"){
-        		$aulist->setSports($_POST['peCourse']);
+
+        //update
+        //foreach($type as $key){
+            //$aulist->addType($type[$i]);
+            //echo($key);
+        
+            if($_POST['pe']==1){
+                $aulist->addType('pe');
+                $aulist->setSports($_POST['peCourse']);
         		if($aulist->addPes()){
         			echo("Sports Successfully added!");
     			}
-    		}else if($key=="study"){
-        		$aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location'],$_POST['others']);
+    		}
+        	if($_POST['study']==1){
+                $aulist->addType('study');
+                $aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disadvan'],$_POST['location'],$_POST['others']);
         		if($aulist->addStudy()){ 
         			echo("Studying  Information Successfully added!");
         		}
-    		}else{
-        		$aulist->setCourse($_POST['course']);
+    		}
+        	if($_POST['teach']==1){
+                $aulist->addType('learn');
+                $aulist->setCourse($_POST['course']);
         		if($aulist->addCourse()){  
         			echo("Course Information Successfully added!");
         		}
     		}
-		}  
+        //}
+        
+        /*if($_POST{'pe'}!=null){
+        		$aulist->setSports($_POST['peCourse']);
+        		if($aulist->addPes()){
+        			echo("Sports Successfully added!");
+    			}
+        }else if($_POST['study']!=null){
+        		$aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location'],$_POST['others']);
+        		if($aulist->addStudy()){ 
+        			echo("Studying  Information Successfully added!");
+        		}
+        }else if($_POST['course']!=null){
+        		$aulist->setCourse($_POST['course']);
+        		if($aulist->addCourse()){  
+        			echo("Course Information Successfully added!");
+        		}
+        }*/
   	}
 
 	
