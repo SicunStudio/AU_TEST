@@ -6,4 +6,4 @@ AU_TEST
 # @copyright 2014
 # This is a WebSite Collecting Student's Information about the coming exam;
 # Suited for Mobile View
-# For Details plz see Au_Test_InSAE.php&AU_TEST_INDEX.HTML
+# For Details plz visit http://1.aliezted.sinaapp.com/auhelp/index.html.
