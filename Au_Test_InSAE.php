@@ -5,11 +5,11 @@
 * version v0.1
 * Without Input-checking
 */
+header("Content-Type: text/html; charset=UTF-8");
 class AuList{
     private $name=null;
     private $department=null;
     private $contact=null;
-    //private $Type=null;        //two dimensional array
     
     private $peCourse=null;
     
@@ -25,7 +25,6 @@ class AuList{
         $this->name=$name;
         $this->department=$department;
         $this->contact=$contact;
-        //$this->Type=$Type;
         return $this->add();
     }
     
@@ -33,17 +32,61 @@ class AuList{
         $this->peCourse=$peCourse;
     }
     public function setStudy($className,$advan,$disadvan,$location,$others){
-        $this->className=$className;
-        $this->advan=$advan;
-        $this->disadvan=$disadvan;
-        $this->location=$location;
-        $this->others=$others;
+        $this->className=trim($className);
+        $this->advan=trim($advan);
+        $this->disadvan=trim($disadvan);
+        $this->location=trim($location);
+        $this->others=trim($others);
+        if(!get_magic_quotes_gpc()){
+			$this->className=addslashes($this->className);
+            $this->advan=addslashes($this->advan);
+        	$this->disadvan=addslashes($this->disadvan);
+            $this->location=addslashes($this->location);
+            $this->others=addslashes($this->others);
+    	}
     }
     public function setCourse($course){
-        $this->course=$course;
+        $this->course=trim($course);
+        if(!get_magic_quotes_gpc()){
+			$this->course=addslashes($this->course);
+    	}
     }
     
-
+    public function getName(){
+    	return $this->name;
+    }
+     public function getDepartment(){
+    	return $this->department;
+    }
+     public function getContact(){
+    	return $this->contact;
+    }
+     public function getPeCourse(){
+    	return $this->peCourse;
+    }
+     public function getClassName(){
+    	return $this->className;
+    }
+     public function getAdvan(){
+    	return $this->advan;
+    }
+     public function getDisadvan(){
+    	return $this->disadvan;
+    }
+     public function getLocation(){
+    	return $this->location;
+    }
+     public function getOthers(){
+    	return $this->others;
+    }
+     public function getCourse(){
+    	return $this->course;
+    }
+    
+    
+    public function __toString(){
+       
+    }
     /*
     * Boolean add- method
     */
@@ -67,13 +110,15 @@ class AuList{
         $this->name=$mysql->escape($this->name);
         $this->department=$mysql->escape($this->department);
         $this->contact=$mysql->escape($this->contact);
-        //$this->Type=$mysql->escape($this->Type);
         $sql="insert into au_list(name,department,contact) values('$this->name','$this->department','$this->contact')";
         $mysql->runSql($sql);
         if( $mysql->errno() != 0 )
         {
-     	      die( "Error:" . $mysql->errmsg() );
-              return false;
+            if($mysql->errno()==1062)
+            	die( "该手机号已被注册，请检查后重试!"  );
+            else
+                die( "Error:" . $mysql->errmsg() );
+            return false;
         }
         $mysql->closeDb();
         return true;
@@ -129,66 +174,72 @@ class AuList{
         
         return true;
     }
+    static  function findInformation($phone){
+     	$mysql=new SaeMysql();
+     	$phonenum=$mysql->escape($phone);
+        $sql_find="select name,department,contact,pecourse,classname,advan,disadvan,location,others,course  from au_list where contact='$phonenum'";
+        $data=$mysql->getLine($sql_find);
+        foreach($data as $key=>$value){
+        	echo $value."<br/>";
+        }
+    }
 }   
 	//除去特殊符号
+	$flag=1;
 	$name=trim($_POST['name']);
 	$department=trim($_POST['department']);
 	$contact=trim($_POST['contact']);
-	//$type=$_POST['type'];
-	//Code here...
+	if(!get_magic_quotes_gpc()){
+		$name=addslashes($name);
+    	$department=addslashes($department);
+        $contact=addslashes($contact);
+    }
 	
-	if($aulist=new AuList($name,$department,$contact)){  
-  		echo("Basic Information Successfully added!");
-
+	//Code here...
+	if($_POST['phone']!=NULL){
+        AuList::findInformation(trim($_POST['phone']));   
+	}else if($aulist=new AuList($name,$department,$contact)){  
+        if($flag){
+            echo("你的信息已成功录入！".'<br />');
+        	$flag=0;
+        }else{
+        	echo("信息修改成功");
+        }
+        	echo("姓名：".$aulist->getName().'<br />');
+        	echo("院系：".$aulist->getDepartment().'<br />');
+            echo("手机号：".$aulist->getContact().'<br />');
         //update
-        //foreach($type as $key){
-            //$aulist->addType($type[$i]);
-            //echo($key);
-        
-            if($_POST['pe']==1){
+        	if($_POST['pe']==1){
                 $aulist->addType('pe');
                 $aulist->setSports($_POST['peCourse']);
         		if($aulist->addPes()){
-        			echo("Sports Successfully added!");
+                    echo("体育助考项目:".$aulist->getPeCourse());
     			}
     		}
         	if($_POST['study']==1){
                 $aulist->addType('study');
                 $aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disadvan'],$_POST['location'],$_POST['others']);
         		if($aulist->addStudy()){ 
-        			echo("Studying  Information Successfully added!");
+                    echo("一对一自习：".'<br />');
+                    echo("院系班级：".$aulist->getClassName().'<br />');
+                    echo("优势学科：".$aulist->getAdvan().'<br />');
+                    echo("劣势学科：".$aulist->getDisadvan().'<br />');
+                    echo("自习地点：".$aulist->getLocation().'<br />');
+                    echo("其他要求：".$aulist->getOthers().'<br />');
         		}
     		}
         	if($_POST['teach']==1){
                 $aulist->addType('learn');
                 $aulist->setCourse($_POST['course']);
         		if($aulist->addCourse()){  
-        			echo("Course Information Successfully added!");
+                    
+                    echo("串讲课目：".$aulist->getCourse());
         		}
-    		}
-        //}
-        
-        /*if($_POST{'pe'}!=null){
-        		$aulist->setSports($_POST['peCourse']);
-        		if($aulist->addPes()){
-        			echo("Sports Successfully added!");
-    			}
-        }else if($_POST['study']!=null){
-        		$aulist->setStudy($_POST['className'],$_POST['advan'],$_POST['disAdvan'],$_POST['location'],$_POST['others']);
-        		if($aulist->addStudy()){ 
-        			echo("Studying  Information Successfully added!");
-        		}
-        }else if($_POST['course']!=null){
-        		$aulist->setCourse($_POST['course']);
-        		if($aulist->addCourse()){  
-        			echo("Course Information Successfully added!");
-        		}
-        }*/
-  	}
+            }
+                
+ 		}
 
-	
-
-
+		
   /*
    * 将各种助考对应的类分开 Version 2
    */
